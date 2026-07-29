@@ -8,16 +8,18 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <!-- Bootstrap 5 & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     
-    <!-- CDNs: Three.js, GSAP, html2pdf -->
+    <!-- CDNs: Three.js, GSAP, html2pdf, docx, FileSaver -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <style>
         :root {
@@ -133,14 +135,24 @@
             position: relative;
         }
 
-        /* Template Dynamic Layouts */
+        /* 10 ATS & JOB-READY TEMPLATE STYLES */
+        .a4-page h1, .a4-page h2, .a4-page h3, .a4-page p, .a4-page div { box-sizing: border-box; }
+        .contact-info { font-size: 11px; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; color: #475569; }
+        .contact-item { display: flex; align-items: center; gap: 5px; }
+        .resume-item { margin-bottom: 12px; page-break-inside: avoid; }
+        .item-header { display: flex; justify-content: space-between; font-weight: 600; font-size: 12.5px; }
+        .item-sub { font-size: 11.5px; color: #64748b; font-style: italic; }
+        .item-desc { font-size: 11px; margin-top: 4px; color: #334155; white-space: pre-line; line-height: 1.45; }
+        .skill-badge { display: inline-block; background: #f1f5f9; color: #334155; font-size: 10px; padding: 3px 8px; border-radius: 4px; margin: 2px; font-weight: 600; }
+        .profile-img-preview { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; }
+
         /* 1. Modern */
         .tpl-modern { font-family: 'Inter', sans-serif; padding: 35px; }
         .tpl-modern .resume-header { border-bottom: 2px solid #0284c7; padding-bottom: 15px; margin-bottom: 20px; }
         .tpl-modern h1 { font-size: 26px; font-weight: 800; color: #0f172a; margin: 0; }
         .tpl-modern .job-title { color: #0284c7; font-weight: 600; font-size: 15px; }
         .tpl-modern .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #0284c7; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-top: 18px; margin-bottom: 10px; }
-        
+
         /* 2. Executive */
         .tpl-executive { font-family: 'Poppins', sans-serif; padding: 35px; }
         .tpl-executive .resume-header { text-align: center; background: #0f172a; color: #fff; padding: 30px; margin: -35px -35px 25px -35px; }
@@ -160,32 +172,49 @@
         .tpl-creative .main-content { width: 67%; padding: 30px; background: #fff; }
         .tpl-creative h1 { font-size: 22px; color: #fff; margin: 0; font-weight: 700; }
         .tpl-creative .sidebar .section-title { color: #38bdf8; font-size: 12px; font-weight: 600; text-transform: uppercase; border-bottom: 1px solid #334155; padding-bottom: 4px; margin-top: 20px; margin-bottom: 10px; }
+        .tpl-creative .sidebar .contact-info { color: #cbd5e1; flex-direction: column; gap: 6px; }
+        .tpl-creative .sidebar .skill-badge { background: #1e293b; color: #38bdf8; }
         .tpl-creative .main-content .section-title { color: #0f172a; font-size: 14px; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid #38bdf8; padding-bottom: 4px; margin-top: 20px; margin-bottom: 10px; }
 
         /* 5. Tech Developer */
         .tpl-tech { font-family: 'Fira Code', monospace; padding: 35px; background: #ffffff; }
         .tpl-tech .resume-header { background: #f8fafc; padding: 20px; border-radius: 6px; border-left: 5px solid #10b981; margin-bottom: 20px; }
         .tpl-tech h1 { font-size: 24px; font-weight: 700; color: #065f46; margin: 0; }
+        .tpl-tech .job-title { color: #047857; font-size: 14px; }
         .tpl-tech .section-title { font-size: 12px; font-weight: 700; color: #047857; background: #ecfdf5; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 18px; margin-bottom: 10px; }
 
         /* 6. Corporate */
-        .tpl-corporate { font-family: 'Inter', sans-serif; padding: 38px; }
+        .tpl-corporate { font-family: 'Roboto', sans-serif; padding: 38px; }
         .tpl-corporate .resume-header { text-align: left; border-bottom: 3px double #334155; padding-bottom: 15px; margin-bottom: 20px; }
         .tpl-corporate h1 { font-size: 26px; font-weight: 700; color: #1e3a8a; margin: 0; }
         .tpl-corporate .job-title { color: #475569; font-size: 15px; font-weight: 500; }
         .tpl-corporate .section-title { font-size: 13px; font-weight: 700; color: #1e3a8a; text-transform: uppercase; margin-top: 20px; margin-bottom: 8px; border-bottom: 1px solid #cbd5e1; }
 
-        /* Shared Resume Content Elements */
-        .contact-info { font-size: 11px; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; color: #475569; }
-        .tpl-creative .sidebar .contact-info { color: #cbd5e1; flex-direction: column; gap: 6px; }
-        .contact-item { display: flex; align-items: center; gap: 5px; }
-        .resume-item { margin-bottom: 14px; page-break-inside: avoid; }
-        .item-header { display: flex; justify-content: space-between; font-weight: 600; font-size: 12.5px; }
-        .item-sub { font-size: 11.5px; color: #64748b; font-style: italic; }
-        .item-desc { font-size: 11px; margin-top: 4px; color: #334155; white-space: pre-line; line-height: 1.45; }
-        .skill-badge { display: inline-block; background: #f1f5f9; color: #334155; font-size: 10px; padding: 3px 8px; border-radius: 4px; margin: 2px; font-weight: 600; }
-        .tpl-creative .sidebar .skill-badge { background: #1e293b; color: #38bdf8; }
-        .profile-img-preview { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; }
+        /* 7. ATS Standard Premier */
+        .tpl-ats-standard { font-family: 'Arial', sans-serif; padding: 40px; color: #111; line-height: 1.4; }
+        .tpl-ats-standard h1 { font-size: 24px; text-transform: uppercase; margin: 0; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 4px; }
+        .tpl-ats-standard .job-title { font-size: 14px; font-weight: bold; color: #333; margin-top: 2px; }
+        .tpl-ats-standard .section-title { font-size: 12px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #000; margin-top: 18px; margin-bottom: 8px; padding-bottom: 2px; }
+
+        /* 8. Elegant Academic */
+        .tpl-academic { font-family: 'Lora', serif; padding: 42px; color: #1a1a1a; }
+        .tpl-academic h1 { font-size: 26px; font-weight: 600; text-align: center; margin: 0; letter-spacing: 0.5px; }
+        .tpl-academic .job-title { font-size: 14px; text-align: center; font-style: italic; color: #444; margin-bottom: 6px; }
+        .tpl-academic .contact-info { justify-content: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+        .tpl-academic .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #2c3e50; border-bottom: 1px solid #2c3e50; padding-bottom: 3px; margin-top: 20px; margin-bottom: 10px; }
+
+        /* 9. Modern Compact Grid */
+        .tpl-compact { font-family: 'Montserrat', sans-serif; padding: 30px; font-size: 10.5px; }
+        .tpl-compact h1 { font-size: 22px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
+        .tpl-compact .job-title { color: #2563eb; font-weight: 700; font-size: 13px; }
+        .tpl-compact .section-title { font-size: 11px; font-weight: 800; text-transform: uppercase; background: #f1f5f9; padding: 3px 6px; color: #1e293b; margin-top: 14px; margin-bottom: 8px; border-left: 3px solid #2563eb; }
+
+        /* 10. Executive Classic Header */
+        .tpl-classic-lead { font-family: 'Cinzel', serif, 'Inter'; padding: 35px; }
+        .tpl-classic-lead .resume-header { border-left: 6px solid #854d0e; padding-left: 15px; margin-bottom: 20px; }
+        .tpl-classic-lead h1 { font-family: 'Cinzel', serif; font-size: 25px; font-weight: 700; color: #713f12; margin: 0; }
+        .tpl-classic-lead .job-title { font-family: 'Inter', sans-serif; font-weight: 600; color: #a16207; font-size: 14px; }
+        .tpl-classic-lead .section-title { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #713f12; border-bottom: 2px solid #fef08a; padding-bottom: 3px; margin-top: 18px; margin-bottom: 10px; }
 
         /* ATS Metric Dashboard */
         .ats-circle {
@@ -216,7 +245,7 @@
 </head>
 <body>
 
-    <!-- Three.js Interactive Particle Canvas -->
+    <!-- Three.js Canvas Container -->
     <div id="canvas-container"></div>
 
     <!-- Live Toast Container -->
@@ -243,8 +272,8 @@
                 <ul class="navbar-nav ms-auto gap-3 align-items-center">
                     <li class="nav-item"><a class="nav-link active" href="#hero">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="#builder">Studio Workspace</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#templates">Templates</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#ats-section">ATS Optimizer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#templates">10 Templates</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#ats-section">ATS Optimizer Pro</a></li>
                     <li class="nav-item"><button class="btn btn-outline-light btn-sm px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#authModal">Login</button></li>
                     <li class="nav-item"><button class="btn btn-gradient btn-sm px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#authModal">Get Started</button></li>
                 </ul>
@@ -258,20 +287,20 @@
             <div class="row align-items-center gy-5">
                 <div class="col-lg-6 hero-text-col">
                     <div class="badge bg-outline-info text-cyan border border-info mb-3 px-3 py-2 rounded-pill">
-                        <i class="bi bi-cpu-fill me-1"></i> Interactive 3D Canvas Enabled
+                        <i class="bi bi-cpu-fill me-1"></i> Interactive 3D Engine + Max ATS 100 System
                     </div>
                     <h1 class="display-4 fw-extrabold mb-3">
-                        Build High-Impact Resumes <span class="gradient-text">That Get Interviews.</span>
+                        Build High-Impact Resumes <span class="gradient-text">That Pass Recruiters & ATS.</span>
                     </h1>
                     <p class="lead text-muted mb-4 fs-6">
-                        Create real-time, recruiter-approved ATS resumes with responsive templates, instant A4 PDF export, and automatic score optimization.
+                        Select from 10 industry-optimized layouts, fine-tune key action keywords, and generate print-ready pixel-perfect PDFs or Word files.
                     </p>
                     <div class="d-flex flex-wrap gap-3">
                         <a href="#builder" class="btn btn-gradient btn-lg px-4 rounded-pill fw-semibold">
                             <i class="bi bi-sliders me-2"></i>Open Studio Workspace
                         </a>
                         <a href="#templates" class="btn btn-outline-light btn-lg px-4 rounded-pill fw-semibold">
-                            <i class="bi bi-grid-3x3-gap me-2"></i>View Templates
+                            <i class="bi bi-grid-3x3-gap me-2"></i>View All 10 Templates
                         </a>
                     </div>
                 </div>
@@ -283,14 +312,14 @@
                                 <span class="badge bg-warning rounded-circle p-1"> </span>
                                 <span class="badge bg-success rounded-circle p-1"> </span>
                             </div>
-                            <small class="text-cyan"><i class="bi bi-check2-circle"></i> Live ATS Ready</small>
+                            <small class="text-cyan"><i class="bi bi-shield-check"></i> 100% ATS Job-Ready</small>
                         </div>
                         <div class="text-start bg-white text-dark p-3 rounded shadow-sm opacity-90" style="font-size: 0.78rem;">
                             <div class="fw-bold fs-6 text-primary">ALEX MORGAN</div>
                             <div class="text-muted mb-2">Senior Full Stack Developer</div>
                             <div class="border-top pt-2">
                                 <div class="fw-bold text-uppercase fs-7 text-secondary">Summary</div>
-                                <div>Architecting resilient microservices and interactive 3D web portals with 6+ years of production experience.</div>
+                                <div>Architecting resilient microservices with 6+ years experience. Boosted performance by 40% with automated pipelines.</div>
                             </div>
                         </div>
                     </div>
@@ -305,35 +334,37 @@
             <!-- Global Status Bar -->
             <div class="glass-card p-3 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    <span class="fw-semibold text-cyan"><i class="bi bi-kanban me-1"></i> Editor Panel</span>
+                    <span class="fw-semibold text-cyan"><i class="bi bi-kanban me-1"></i> Studio Panel</span>
                     <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2 py-1" id="save-status">
-                        <i class="bi bi-cloud-check me-1"></i> Local Storage Synced
+                        <i class="bi bi-cloud-check me-1"></i> Auto-Synced
                     </span>
                 </div>
                 <div class="d-flex align-items-center gap-3 flex-grow-1 mx-lg-4" style="max-width: 380px;">
-                    <small class="text-muted text-nowrap">Progress: <strong id="completion-pct">0%</strong></small>
+                    <small class="text-muted text-nowrap">Completeness: <strong id="completion-pct">0%</strong></small>
                     <div class="progress w-100" style="height: 8px;">
                         <div id="completion-bar" class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="confirmClearData()">
-                        <i class="bi bi-trash me-1"></i> Clear
+                        <i class="bi bi-trash me-1"></i> Reset
                     </button>
                     <button class="btn btn-outline-info btn-sm rounded-pill" onclick="window.print()">
                         <i class="bi bi-printer me-1"></i> Print
                     </button>
+                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="exportToWord()">
+                        <i class="bi bi-file-earmark-word me-1"></i> Export Word
+                    </button>
                     <button class="btn btn-gradient btn-sm rounded-pill px-3" onclick="exportToPDF()">
-                        <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
+                        <i class="bi bi-file-earmark-pdf me-1"></i> Export ATS PDF
                     </button>
                 </div>
             </div>
 
             <div class="row g-4">
-                <!-- Left Panel: Tabbed Form Editor -->
+                <!-- Left Panel: Form Editor -->
                 <div class="col-lg-5">
                     <div class="glass-card p-3 p-md-4 h-100">
-                        <!-- Tab Bar -->
                         <ul class="nav nav-pills flex-nowrap overflow-x-auto pb-2 mb-3" id="editorTabs" role="tablist">
                             <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-personal"><i class="bi bi-person me-1"></i> Profile</button></li>
                             <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-about"><i class="bi bi-card-text me-1"></i> About</button></li>
@@ -348,7 +379,7 @@
                             
                             <!-- 1. Profile -->
                             <div class="tab-pane fade show active" id="tab-personal">
-                                <h6 class="text-cyan mb-3"><i class="bi bi-person-lines-fill me-2"></i>Personal Information</h6>
+                                <h6 class="text-cyan mb-3"><i class="bi bi-person-lines-fill me-2"></i>Personal Details</h6>
                                 <div class="row g-3">
                                     <div class="col-12 text-center mb-2">
                                         <div class="d-inline-block position-relative">
@@ -364,7 +395,7 @@
                                         <input type="text" id="p-fullname" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Alex Morgan" oninput="updateResume()">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label small text-muted">Professional Title</label>
+                                        <label class="form-label small text-muted">Job Title</label>
                                         <input type="text" id="p-title" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Senior Software Engineer" oninput="updateResume()">
                                     </div>
                                     <div class="col-md-6">
@@ -388,7 +419,7 @@
                                         <input type="text" id="p-github" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="github.com/alex" oninput="updateResume()">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label small text-muted">Portfolio</label>
+                                        <label class="form-label small text-muted">Portfolio / Website</label>
                                         <input type="text" id="p-portfolio" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="alexmorgan.dev" oninput="updateResume()">
                                     </div>
                                 </div>
@@ -397,16 +428,16 @@
                             <!-- 2. Summary -->
                             <div class="tab-pane fade" id="tab-about">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="text-cyan mb-0"><i class="bi bi-card-text me-2"></i>Professional Summary</h6>
-                                    <small class="text-muted"><span id="summary-counter">0</span> / 500</small>
+                                    <h6 class="text-cyan mb-0"><i class="bi bi-card-text me-2"></i>Executive Summary</h6>
+                                    <small class="text-muted"><span id="summary-counter">0</span> / 600</small>
                                 </div>
-                                <textarea id="p-summary" class="form-control bg-dark text-light border-secondary" rows="6" maxlength="500" placeholder="Write a targeted 3-4 sentence summary emphasizing core skills and measurable business impact..." oninput="updateResume()"></textarea>
+                                <textarea id="p-summary" class="form-control bg-dark text-light border-secondary" rows="6" maxlength="600" placeholder="Targeted summary including strong metrics, core domains, and quantifiable job achievements..." oninput="updateResume()"></textarea>
                             </div>
 
                             <!-- 3. Work Experience -->
                             <div class="tab-pane fade" id="tab-exp">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="text-cyan mb-0"><i class="bi bi-briefcase me-2"></i>Work Experience</h6>
+                                    <h6 class="text-cyan mb-0"><i class="bi bi-briefcase me-2"></i>Work History</h6>
                                     <button class="btn btn-outline-info btn-sm rounded-pill" onclick="addExperience()"><i class="bi bi-plus-lg me-1"></i> Add Entry</button>
                                 </div>
                                 <div id="experience-list"></div>
@@ -424,7 +455,7 @@
                             <!-- 5. Skills -->
                             <div class="tab-pane fade" id="tab-skills">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="text-cyan mb-0"><i class="bi bi-tools me-2"></i>Technical Skills</h6>
+                                    <h6 class="text-cyan mb-0"><i class="bi bi-gear me-2"></i>Technical & Core Skills</h6>
                                     <button class="btn btn-outline-info btn-sm rounded-pill" onclick="addSkill()"><i class="bi bi-plus-lg me-1"></i> Add Skill</button>
                                 </div>
                                 <div id="skills-list"></div>
@@ -433,7 +464,7 @@
                             <!-- 6. Projects -->
                             <div class="tab-pane fade" id="tab-projects">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="text-cyan mb-0"><i class="bi bi-code-slash me-2"></i>Highlighted Projects</h6>
+                                    <h6 class="text-cyan mb-0"><i class="bi bi-code-slash me-2"></i>Featured Projects</h6>
                                     <button class="btn btn-outline-info btn-sm rounded-pill" onclick="addProject()"><i class="bi bi-plus-lg me-1"></i> Add Project</button>
                                 </div>
                                 <div id="projects-list"></div>
@@ -475,17 +506,21 @@
                 <!-- Right Panel: Live A4 Workspace -->
                 <div class="col-lg-7">
                     <div class="glass-card p-3 p-md-4 h-100 d-flex flex-column align-items-center">
-                        <div class="d-flex justify-content-between align-items-center w-100 mb-3 px-2">
+                        <div class="d-flex justify-content-between align-items-center w-100 mb-3 px-2 flex-wrap gap-2">
                             <span class="fw-semibold text-cyan"><i class="bi bi-eye me-1"></i> Live Document Preview</span>
                             <div class="d-flex align-items-center gap-2">
-                                <small class="text-muted d-none d-md-inline">Layout Engine:</small>
-                                <select id="template-select" class="form-select form-select-sm bg-dark text-cyan border-info" style="width: 170px;" onchange="changeTemplate(this.value)">
-                                    <option value="tpl-modern">Modern</option>
-                                    <option value="tpl-executive">Executive</option>
-                                    <option value="tpl-minimal">Minimalist</option>
-                                    <option value="tpl-creative">Creative Dual</option>
-                                    <option value="tpl-tech">Tech Developer</option>
-                                    <option value="tpl-corporate">Corporate</option>
+                                <small class="text-muted d-none d-md-inline">Select Layout Engine:</small>
+                                <select id="template-select" class="form-select form-select-sm bg-dark text-cyan border-info" style="min-width: 200px;" onchange="changeTemplate(this.value)">
+                                    <option value="tpl-modern">1. Modern Blue</option>
+                                    <option value="tpl-executive">2. Executive Banner</option>
+                                    <option value="tpl-minimal">3. Minimalist Clean</option>
+                                    <option value="tpl-creative">4. Creative Split Screen</option>
+                                    <option value="tpl-tech">5. Tech / Developer Monospace</option>
+                                    <option value="tpl-corporate">6. Corporate Serif Double</option>
+                                    <option value="tpl-ats-standard">7. ATS Premier Standard</option>
+                                    <option value="tpl-academic">8. Elegant Academic Serif</option>
+                                    <option value="tpl-compact">9. Compact High-Density Grid</option>
+                                    <option value="tpl-classic-lead">10. Classic Gold Lead</option>
                                 </select>
                             </div>
                         </div>
@@ -506,38 +541,108 @@
     <section id="templates" class="py-5">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="fw-bold"><span class="gradient-text">6 Layout</span> Architectures</h2>
-                <p class="text-muted">Instantly switch between templates without losing your data.</p>
+                <h2 class="fw-bold"><span class="gradient-text">10 Industry-Specific</span> Layout Architectures</h2>
+                <p class="text-muted">Designed to match strict corporate ATS filters and recruiter standards. Switch instantly with zero data loss.</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-4">
+                <div class="col-md-4 col-lg-3">
                     <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="bg-light rounded mb-3 p-4 text-dark fw-bold border" style="height: 150px;">Modern Layout</div>
-                            <h5>Modern</h5>
-                            <p class="small text-muted">Clean headers with blue accent bars for tech & product roles.</p>
+                            <div class="bg-light rounded mb-3 p-3 text-dark fw-bold border" style="height: 110px; font-size: 12px;">1. Modern Blue</div>
+                            <h6>Modern Blue</h6>
+                            <p class="small text-muted mb-3">Clean headers with blue accent bars for tech & product roles.</p>
                         </div>
                         <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-modern')">Activate Template</button>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 col-lg-3">
                     <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="bg-dark border border-secondary rounded mb-3 p-4 text-light fw-bold" style="height: 150px;">Executive Banner</div>
-                            <h5>Executive</h5>
-                            <p class="small text-muted">Bold dark top panel layout for leadership and management roles.</p>
+                            <div class="bg-dark border border-secondary rounded mb-3 p-3 text-light fw-bold" style="height: 110px; font-size: 12px;">2. Executive Banner</div>
+                            <h6>Executive Banner</h6>
+                            <p class="small text-muted mb-3">Bold dark top panel layout for leadership and management roles.</p>
                         </div>
                         <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-executive')">Activate Template</button>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 col-lg-3">
                     <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="bg-white border rounded mb-3 p-4 text-secondary fw-normal" style="height: 150px;">Minimal Space</div>
-                            <h5>Minimalist</h5>
-                            <p class="small text-muted">Elegant spacing and light serif accents for maximum readability.</p>
+                            <div class="bg-white border rounded mb-3 p-3 text-secondary fw-normal" style="height: 110px; font-size: 12px;">3. Minimalist Clean</div>
+                            <h6>Minimalist Clean</h6>
+                            <p class="small text-muted mb-3">Elegant spacing and light serif accents for maximum readability.</p>
                         </div>
                         <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-minimal')">Activate Template</button>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="bg-dark border rounded mb-3 p-3 text-cyan fw-semibold" style="height: 110px; font-size: 12px;">4. Creative Split</div>
+                            <h6>Creative Split</h6>
+                            <p class="small text-muted mb-3">Dual-column sidebar layout suited for UI/UX & Design positions.</p>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-creative')">Activate Template</button>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="bg-light border rounded mb-3 p-3 text-success font-monospace fw-bold" style="height: 110px; font-size: 12px;">5. Tech Monospace</div>
+                            <h6>Tech Monospace</h6>
+                            <p class="small text-muted mb-3">Coder-focused monospace design for DevOps, Software & Data engineers.</p>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-tech')">Activate Template</button>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="bg-white border rounded mb-3 p-3 text-primary fw-bold" style="height: 110px; font-size: 12px;">6. Corporate Serif</div>
+                            <h6>Corporate Serif</h6>
+                            <p class="small text-muted mb-3">Formal double line divider layout ideal for Finance, Law & Advisory.</p>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-corporate')">Activate Template</button>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="bg-white border rounded mb-3 p-3 text-dark fw-bold" style="height: 110px; font-size: 12px;">7. ATS Premier Standard</div>
+                            <h6>ATS Premier Standard</h6>
+                            <p class="small text-muted mb-3">Ultra-simple, zero-graphics structure tailored for 100% ATS parser accuracy.</p>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-ats-standard')">Activate Template</button>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="bg-white border rounded mb-3 p-3 text-dark font-monospace" style="height: 110px; font-size: 12px;">8. Elegant Academic</div>
+                            <h6>Academic Serif</h6>
+                            <p class="small text-muted mb-3">Classic Lora serif typography style for Research, Education & PhDs.</p>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-academic')">Activate Template</button>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="bg-light border rounded mb-3 p-3 text-secondary fw-extrabold" style="height: 110px; font-size: 12px;">9. Compact Grid</div>
+                            <h6>Compact Density Grid</h6>
+                            <p class="small text-muted mb-3">High-density content layout designed for multi-project professionals.</p>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-compact')">Activate Template</button>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="glass-card p-3 text-center h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="bg-white border rounded mb-3 p-3 text-warning-emphasis fw-bold" style="height: 110px; font-size: 12px;">10. Classic Gold Lead</div>
+                            <h6>Classic Gold Lead</h6>
+                            <p class="small text-muted mb-3">Distinguished gold border styling for senior managers and executives.</p>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm rounded-pill w-100" onclick="selectTemplateAndScroll('tpl-classic-lead')">Activate Template</button>
                     </div>
                 </div>
             </div>
@@ -556,12 +661,13 @@
                                 <small class="text-cyan fs-7" id="ats-score-status">Checking</small>
                             </div>
                         </div>
-                        <h5 class="mt-3 mb-0 fw-semibold">Real-Time ATS Health</h5>
+                        <h5 class="mt-3 mb-0 fw-semibold">Real-Time ATS Score Optimizer</h5>
+                        <p class="small text-muted mt-1">Live structural & content scoring algorithm</p>
                     </div>
                     <div class="col-md-8">
-                        <h4 class="fw-bold mb-3">Recruiter Optimization Checklist</h4>
+                        <h4 class="fw-bold mb-3">ATS Compatibility & Keyword Analysis</h4>
                         <ul class="list-group list-group-flush bg-transparent" id="ats-recommendations">
-                            <!-- JS Populated -->
+                            <!-- Dynamic Content -->
                         </ul>
                     </div>
                 </div>
@@ -569,36 +675,36 @@
         </div>
     </section>
 
-    <!-- Erase Modal -->
+    <!-- Clear Modal -->
     <div class="modal fade" id="clearModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content glass-card text-light border-secondary">
                 <div class="modal-header border-secondary">
-                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle text-warning me-2"></i>Reset All Data?</h5>
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle text-warning me-2"></i>Reset Form Data?</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-muted">
-                    This will permanently clear your current resume inputs and local storage draft.
+                    This will permanently clear your live inputs and restore default sample data.
                 </div>
                 <div class="modal-footer border-secondary">
                     <button type="button" class="btn btn-outline-light btn-sm rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger btn-sm rounded-pill" onclick="executeClearData()">Confirm Erase</button>
+                    <button type="button" class="btn btn-danger btn-sm rounded-pill" onclick="executeClearData()">Confirm Reset</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Auth Placeholder Modal -->
+    <!-- Auth Modal -->
     <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content glass-card text-light border-secondary">
                 <div class="modal-header border-secondary">
-                    <h5 class="modal-title gradient-text">ResumeCraft Cloud</h5>
+                    <h5 class="modal-title gradient-text">ResumeCraft Cloud Account</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-muted small mb-3">Sync your resume versions across devices or connect custom domains.</p>
-                    <form onsubmit="event.preventDefault(); showToast('Session initialized.'); bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();">
+                    <p class="text-muted small mb-3">Save and back up multiple resume profiles securely to cloud storage.</p>
+                    <form onsubmit="event.preventDefault(); showToast('Session initialized successfully.'); bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();">
                         <div class="mb-3">
                             <label class="form-label small text-muted">Email</label>
                             <input type="email" class="form-control bg-dark text-light border-secondary" required placeholder="name@domain.com">
@@ -617,7 +723,7 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Complete Application Engine -->
+    <!-- JavaScript Application Engine -->
     <script>
         /* ==========================================================================
            1. THREE.JS INTERACTIVE 3D PARTICLE ENGINE
@@ -627,6 +733,8 @@
 
         function initThreeJS() {
             const container = document.getElementById('canvas-container');
+            if (!container) return;
+            
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.z = 35;
@@ -678,7 +786,9 @@
                 particleSystem.rotation.x += 0.0006 + mouseY * 0.05;
                 particleSystem.rotation.y += 0.0008 + mouseX * 0.05;
             }
-            renderer.render(scene, camera);
+            if (renderer && scene && camera) {
+                renderer.render(scene, camera);
+            }
         }
 
         window.addEventListener('resize', () => {
@@ -702,9 +812,9 @@
             linkedin: 'linkedin.com/in/alexmorgan',
             github: 'github.com/alexmorgan',
             portfolio: 'alexmorgan.dev',
-            summary: 'Architecting resilient microservices and interactive web portals with 6+ years of full-stack engineering experience. Proven track record reducing API latency by 40% and deploying highly scalable cloud software.',
+            summary: 'Architecting resilient microservices and interactive web applications with 6+ years of software engineering experience. Achieved 40% reduction in API latency and spearheaded migration of high-throughput data pipelines.',
             experiences: [
-                { id: 1, title: 'Senior Software Engineer', company: 'TechCorp Solutions', start: '2021', end: 'Present', desc: '• Led a squad of 6 engineers launching real-time analytics engine handling 3M+ daily calls.\n• Refactored core GraphQL endpoints, boosting response times by 35%.' }
+                { id: 1, title: 'Senior Software Engineer', company: 'TechCorp Solutions', start: '2021', end: 'Present', desc: '• Led a team of 6 engineers launching real-time analytics engine handling 3M+ daily active requests.\n• Automated CI/CD deployments reducing staging downtime by 45%.' }
             ],
             education: [
                 { id: 1, degree: 'B.S. in Computer Science', school: 'UC Berkeley', start: '2015', end: '2019', grade: '3.85 GPA' }
@@ -717,7 +827,7 @@
                 { id: 5, name: 'AWS / Docker' }
             ],
             projects: [
-                { id: 1, name: 'CloudMetrics Engine', desc: 'Real-time telemetry portal visualizing cluster performance logs.', tech: 'React, D3.js, Node.js' }
+                { id: 1, name: 'CloudMetrics Engine', desc: 'Real-time infrastructure telemetry dashboard visualising cluster performance logs.', tech: 'React, D3.js, Node.js' }
             ],
             certs: [
                 { id: 1, name: 'AWS Certified Solutions Architect', org: 'Amazon Web Services' }
@@ -729,14 +839,16 @@
             customSections: []
         };
 
-        let resumeData = JSON.parse(localStorage.getItem('resumeCraft3D_Data')) || DEFAULT_PROFILE;
+        let resumeData = JSON.parse(localStorage.getItem('resumeCraft3D_Data')) || JSON.parse(JSON.stringify(DEFAULT_PROFILE));
         let currentTemplate = 'tpl-modern';
 
         function saveData() {
             localStorage.setItem('resumeCraft3D_Data', JSON.stringify(resumeData));
             const status = document.getElementById('save-status');
-            status.style.opacity = '1';
-            setTimeout(() => { status.style.opacity = '0.7'; }, 800);
+            if (status) {
+                status.style.opacity = '1';
+                setTimeout(() => { status.style.opacity = '0.7'; }, 800);
+            }
             calculateCompletion();
             calculateATSScore();
         }
@@ -756,6 +868,8 @@
             document.getElementById('p-summary').value = resumeData.summary || '';
             if (resumeData.photo) {
                 document.getElementById('img-preview').src = resumeData.photo;
+            } else {
+                document.getElementById('img-preview').src = 'https://via.placeholder.com/100';
             }
 
             renderDynamicLists();
@@ -765,80 +879,80 @@
         function renderDynamicLists() {
             // Experience List
             const expContainer = document.getElementById('experience-list');
-            expContainer.innerHTML = resumeData.experiences.map((exp, index) => `
+            expContainer.innerHTML = (resumeData.experiences || []).map((exp, index) => `
                 <div class="card bg-dark border-secondary mb-3 p-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <small class="text-cyan fw-bold">Position #${index + 1}</small>
                         <button class="btn btn-xs btn-outline-danger rounded-circle" onclick="removeExperience(${exp.id})"><i class="bi bi-x"></i></button>
                     </div>
                     <div class="row g-2">
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Job Title" value="${exp.title}" oninput="updateExp(${exp.id}, 'title', this.value)"></div>
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Company" value="${exp.company}" oninput="updateExp(${exp.id}, 'company', this.value)"></div>
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Start Date" value="${exp.start}" oninput="updateExp(${exp.id}, 'start', this.value)"></div>
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="End Date / Present" value="${exp.end}" oninput="updateExp(${exp.id}, 'end', this.value)"></div>
-                        <div class="col-12"><textarea class="form-control form-control-sm bg-dark text-light border-secondary" rows="2" placeholder="Responsibilities" oninput="updateExp(${exp.id}, 'desc', this.value)">${exp.desc}</textarea></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Job Title" value="${exp.title || ''}" oninput="updateExp(${exp.id}, 'title', this.value)"></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Company" value="${exp.company || ''}" oninput="updateExp(${exp.id}, 'company', this.value)"></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Start Date" value="${exp.start || ''}" oninput="updateExp(${exp.id}, 'start', this.value)"></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="End Date / Present" value="${exp.end || ''}" oninput="updateExp(${exp.id}, 'end', this.value)"></div>
+                        <div class="col-12"><textarea class="form-control form-control-sm bg-dark text-light border-secondary" rows="2" placeholder="Responsibilities and achievements..." oninput="updateExp(${exp.id}, 'desc', this.value)">${exp.desc || ''}</textarea></div>
                     </div>
                 </div>
             `).join('');
 
             // Education List
             const eduContainer = document.getElementById('education-list');
-            eduContainer.innerHTML = resumeData.education.map((edu, index) => `
+            eduContainer.innerHTML = (resumeData.education || []).map((edu, index) => `
                 <div class="card bg-dark border-secondary mb-3 p-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <small class="text-cyan fw-bold">Education #${index + 1}</small>
                         <button class="btn btn-xs btn-outline-danger rounded-circle" onclick="removeEducation(${edu.id})"><i class="bi bi-x"></i></button>
                     </div>
                     <div class="row g-2">
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Degree / Program" value="${edu.degree}" oninput="updateEdu(${edu.id}, 'degree', this.value)"></div>
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Institution" value="${edu.school}" oninput="updateEdu(${edu.id}, 'school', this.value)"></div>
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Start Date" value="${edu.start}" oninput="updateEdu(${edu.id}, 'start', this.value)"></div>
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="End Date / Grade" value="${edu.end}" oninput="updateEdu(${edu.id}, 'end', this.value)"></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Degree / Program" value="${edu.degree || ''}" oninput="updateEdu(${edu.id}, 'degree', this.value)"></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Institution" value="${edu.school || ''}" oninput="updateEdu(${edu.id}, 'school', this.value)"></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Start Date" value="${edu.start || ''}" oninput="updateEdu(${edu.id}, 'start', this.value)"></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="End Date / Grade" value="${edu.end || ''}" oninput="updateEdu(${edu.id}, 'end', this.value)"></div>
                     </div>
                 </div>
             `).join('');
 
             // Skills List
             const skillsContainer = document.getElementById('skills-list');
-            skillsContainer.innerHTML = `<div class="d-flex flex-wrap gap-2">` + resumeData.skills.map(skill => `
+            skillsContainer.innerHTML = `<div class="d-flex flex-wrap gap-2">` + (resumeData.skills || []).map(skill => `
                 <div class="input-group input-group-sm mb-1" style="width: 175px;">
-                    <input type="text" class="form-control bg-dark text-light border-secondary" value="${skill.name}" oninput="updateSkill(${skill.id}, this.value)">
+                    <input type="text" class="form-control bg-dark text-light border-secondary" value="${skill.name || ''}" oninput="updateSkill(${skill.id}, this.value)">
                     <button class="btn btn-outline-danger" onclick="removeSkill(${skill.id})"><i class="bi bi-x"></i></button>
                 </div>
             `).join('') + `</div>`;
 
             // Projects List
             const projContainer = document.getElementById('projects-list');
-            projContainer.innerHTML = resumeData.projects.map((proj, index) => `
+            projContainer.innerHTML = (resumeData.projects || []).map((proj, index) => `
                 <div class="card bg-dark border-secondary mb-3 p-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <small class="text-cyan fw-bold">Project #${index + 1}</small>
                         <button class="btn btn-xs btn-outline-danger rounded-circle" onclick="removeProject(${proj.id})"><i class="bi bi-x"></i></button>
                     </div>
                     <div class="row g-2">
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Project Title" value="${proj.name}" oninput="updateProj(${proj.id}, 'name', this.value)"></div>
-                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Tech Stack" value="${proj.tech}" oninput="updateProj(${proj.id}, 'tech', this.value)"></div>
-                        <div class="col-12"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Summary" value="${proj.desc}" oninput="updateProj(${proj.id}, 'desc', this.value)"></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Project Title" value="${proj.name || ''}" oninput="updateProj(${proj.id}, 'name', this.value)"></div>
+                        <div class="col-md-6"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Tech Stack" value="${proj.tech || ''}" oninput="updateProj(${proj.id}, 'tech', this.value)"></div>
+                        <div class="col-12"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Summary" value="${proj.desc || ''}" oninput="updateProj(${proj.id}, 'desc', this.value)"></div>
                     </div>
                 </div>
             `).join('');
 
             // Certifications List
             const certsContainer = document.getElementById('certs-list');
-            certsContainer.innerHTML = resumeData.certs.map(c => `
+            certsContainer.innerHTML = (resumeData.certs || []).map(c => `
                 <div class="input-group input-group-sm mb-2">
-                    <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Certification Name" value="${c.name}" oninput="updateCert(${c.id}, 'name', this.value)">
-                    <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Issuer" value="${c.org}" oninput="updateCert(${c.id}, 'org', this.value)">
+                    <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Certification Name" value="${c.name || ''}" oninput="updateCert(${c.id}, 'name', this.value)">
+                    <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Issuer" value="${c.org || ''}" oninput="updateCert(${c.id}, 'org', this.value)">
                     <button class="btn btn-outline-danger" onclick="removeCert(${c.id})"><i class="bi bi-x"></i></button>
                 </div>
             `).join('');
 
             // Languages List
             const langsContainer = document.getElementById('langs-list');
-            langsContainer.innerHTML = resumeData.langs.map(l => `
+            langsContainer.innerHTML = (resumeData.langs || []).map(l => `
                 <div class="input-group input-group-sm mb-2">
-                    <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Language" value="${l.name}" oninput="updateLang(${l.id}, 'name', this.value)">
-                    <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Proficiency" value="${l.level}" oninput="updateLang(${l.id}, 'level', this.value)">
+                    <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Language" value="${l.name || ''}" oninput="updateLang(${l.id}, 'name', this.value)">
+                    <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Proficiency" value="${l.level || ''}" oninput="updateLang(${l.id}, 'level', this.value)">
                     <button class="btn btn-outline-danger" onclick="removeLang(${l.id})"><i class="bi bi-x"></i></button>
                 </div>
             `).join('');
@@ -852,14 +966,14 @@
                         <button class="btn btn-xs btn-outline-danger rounded-circle" onclick="removeCustomSection(${cs.id})"><i class="bi bi-x"></i></button>
                     </div>
                     <div class="row g-2">
-                        <div class="col-12"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Section Header" value="${cs.heading}" oninput="updateCustomSection(${cs.id}, 'heading', this.value)"></div>
-                        <div class="col-12"><textarea class="form-control form-control-sm bg-dark text-light border-secondary" rows="2" placeholder="Content details..." oninput="updateCustomSection(${cs.id}, 'body', this.value)">${cs.body}</textarea></div>
+                        <div class="col-12"><input type="text" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Section Header" value="${cs.heading || ''}" oninput="updateCustomSection(${cs.id}, 'heading', this.value)"></div>
+                        <div class="col-12"><textarea class="form-control form-control-sm bg-dark text-light border-secondary" rows="2" placeholder="Content details..." oninput="updateCustomSection(${cs.id}, 'body', this.value)">${cs.body || ''}</textarea></div>
                     </div>
                 </div>
             `).join('');
         }
 
-        /* Handler Operations */
+        /* Handlers */
         function addExperience() { resumeData.experiences.push({ id: Date.now(), title: '', company: '', start: '', end: '', desc: '' }); renderDynamicLists(); updateResume(); }
         function removeExperience(id) { resumeData.experiences = resumeData.experiences.filter(x => x.id !== id); renderDynamicLists(); updateResume(); }
         function updateExp(id, k, v) { const item = resumeData.experiences.find(x => x.id === id); if (item) { item[k] = v; updateResume(); } }
@@ -868,7 +982,7 @@
         function removeEducation(id) { resumeData.education = resumeData.education.filter(x => x.id !== id); renderDynamicLists(); updateResume(); }
         function updateEdu(id, k, v) { const item = resumeData.education.find(x => x.id === id); if (item) { item[k] = v; updateResume(); } }
 
-        function addSkill() { resumeData.skills.push({ id: Date.now(), name: 'Skill Name' }); renderDynamicLists(); updateResume(); }
+        function addSkill() { resumeData.skills.push({ id: Date.now(), name: 'New Skill' }); renderDynamicLists(); updateResume(); }
         function removeSkill(id) { resumeData.skills = resumeData.skills.filter(x => x.id !== id); renderDynamicLists(); updateResume(); }
         function updateSkill(id, v) { const item = resumeData.skills.find(x => x.id === id); if (item) { item.name = v; updateResume(); } }
 
@@ -886,7 +1000,7 @@
 
         function addCustomSection() {
             if (!resumeData.customSections) resumeData.customSections = [];
-            resumeData.customSections.push({ id: Date.now(), heading: 'Achievements', body: 'Detail achievements here...' });
+            resumeData.customSections.push({ id: Date.now(), heading: 'Achievements', body: 'Add custom achievements here...' });
             renderDynamicLists(); updateResume();
         }
         function removeCustomSection(id) { resumeData.customSections = resumeData.customSections.filter(x => x.id !== id); renderDynamicLists(); updateResume(); }
@@ -905,7 +1019,7 @@
         }
 
         /* ==========================================================================
-           4. TEMPLATE RENDER ENGINE
+           4. TEMPLATE RENDER ENGINE (10 DESIGNS)
            ========================================================================== */
         function updateResume() {
             resumeData.fullname = document.getElementById('p-fullname').value;
@@ -918,7 +1032,7 @@
             resumeData.portfolio = document.getElementById('p-portfolio').value;
             resumeData.summary = document.getElementById('p-summary').value;
 
-            document.getElementById('summary-counter').innerText = resumeData.summary.length;
+            document.getElementById('summary-counter').innerText = (resumeData.summary || '').length;
             const preview = document.getElementById('resume-preview');
             
             if (currentTemplate === 'tpl-creative') {
@@ -936,12 +1050,12 @@
                             ${resumeData.linkedin ? `<div class="contact-item"><i class="bi bi-linkedin"></i> ${resumeData.linkedin}</div>` : ''}
                         </div>
 
-                        ${resumeData.skills.length ? `
+                        ${(resumeData.skills && resumeData.skills.length) ? `
                             <div class="section-title">Skills</div>
                             <div>${resumeData.skills.map(s => `<span class="skill-badge">${s.name}</span>`).join('')}</div>
                         ` : ''}
 
-                        ${resumeData.langs.length ? `
+                        ${(resumeData.langs && resumeData.langs.length) ? `
                             <div class="section-title">Languages</div>
                             <div class="small">${resumeData.langs.map(l => `<div>${l.name} - ${l.level}</div>`).join('')}</div>
                         ` : ''}
@@ -952,7 +1066,7 @@
                             <p class="item-desc">${resumeData.summary}</p>
                         ` : ''}
 
-                        ${resumeData.experiences.length ? `
+                        ${(resumeData.experiences && resumeData.experiences.length) ? `
                             <div class="section-title">Experience</div>
                             ${resumeData.experiences.map(e => `
                                 <div class="resume-item">
@@ -963,7 +1077,7 @@
                             `).join('')}
                         ` : ''}
 
-                        ${resumeData.education.length ? `
+                        ${(resumeData.education && resumeData.education.length) ? `
                             <div class="section-title">Education</div>
                             ${resumeData.education.map(e => `
                                 <div class="resume-item">
@@ -987,7 +1101,7 @@
                                 <h1>${resumeData.fullname || 'Your Name'}</h1>
                                 <div class="job-title">${resumeData.title || ''}</div>
                             </div>
-                            ${resumeData.photo ? `<img src="${resumeData.photo}" class="profile-img-preview" alt="Profile">` : ''}
+                            ${(resumeData.photo && currentTemplate !== 'tpl-ats-standard') ? `<img src="${resumeData.photo}" class="profile-img-preview" alt="Profile">` : ''}
                         </div>
                         <div class="contact-info">
                             ${resumeData.email ? `<span class="contact-item"><i class="bi bi-envelope"></i> ${resumeData.email}</span>` : ''}
@@ -1003,7 +1117,7 @@
                         <div class="item-desc">${resumeData.summary}</div>
                     ` : ''}
 
-                    ${resumeData.experiences.length ? `
+                    ${(resumeData.experiences && resumeData.experiences.length) ? `
                         <div class="section-title">Work Experience</div>
                         ${resumeData.experiences.map(e => `
                             <div class="resume-item">
@@ -1014,7 +1128,7 @@
                         `).join('')}
                     ` : ''}
 
-                    ${resumeData.education.length ? `
+                    ${(resumeData.education && resumeData.education.length) ? `
                         <div class="section-title">Education</div>
                         ${resumeData.education.map(e => `
                             <div class="resume-item">
@@ -1024,7 +1138,7 @@
                         `).join('')}
                     ` : ''}
 
-                    ${resumeData.projects.length ? `
+                    ${(resumeData.projects && resumeData.projects.length) ? `
                         <div class="section-title">Key Projects</div>
                         ${resumeData.projects.map(p => `
                             <div class="resume-item">
@@ -1034,20 +1148,20 @@
                         `).join('')}
                     ` : ''}
 
-                    ${resumeData.skills.length ? `
+                    ${(resumeData.skills && resumeData.skills.length) ? `
                         <div class="section-title">Skills & Expertise</div>
                         <div>${resumeData.skills.map(s => `<span class="skill-badge">${s.name}</span>`).join('')}</div>
                     ` : ''}
 
-                    ${(resumeData.certs.length || resumeData.langs.length) ? `
+                    ${((resumeData.certs && resumeData.certs.length) || (resumeData.langs && resumeData.langs.length)) ? `
                         <div class="row mt-2">
-                            ${resumeData.certs.length ? `
+                            ${(resumeData.certs && resumeData.certs.length) ? `
                                 <div class="col-6">
                                     <div class="section-title">Certifications</div>
                                     ${resumeData.certs.map(c => `<div class="small fw-semibold">${c.name} <span class="text-muted">(${c.org})</span></div>`).join('')}
                                 </div>
                             ` : ''}
-                            ${resumeData.langs.length ? `
+                            ${(resumeData.langs && resumeData.langs.length) ? `
                                 <div class="col-6">
                                     <div class="section-title">Languages</div>
                                     ${resumeData.langs.map(l => `<div class="small">${l.name} - <i>${l.level}</i></div>`).join('')}
@@ -1071,7 +1185,7 @@
             const preview = document.getElementById('resume-preview');
             preview.className = `a4-page ${tpl}`;
             updateResume();
-            showToast(`Template layout updated to ${tpl.replace('tpl-', '').toUpperCase()}`);
+            showToast(`Layout switched to ${tpl.replace('tpl-', '').replace('-', ' ').toUpperCase()}`);
         }
 
         function selectTemplateAndScroll(tpl) {
@@ -1081,8 +1195,10 @@
         }
 
         /* ==========================================================================
-           5. ATS ENGINE & COMPLETION METRICS
+           5. MAXIMUM ATS SCORING ENGINE (100 SCALE WITH ACTION KEYWORDS)
            ========================================================================== */
+        const ATS_ACTION_WORDS = ['led', 'managed', 'developed', 'architected', 'reduced', 'increased', 'boosted', 'launched', 'automated', 'refactored', 'designed', 'built', 'created', 'implemented', 'optimized'];
+
         function calculateCompletion() {
             let total = 8;
             let filled = 0;
@@ -1091,10 +1207,10 @@
             if (resumeData.title) filled++;
             if (resumeData.email) filled++;
             if (resumeData.summary) filled++;
-            if (resumeData.experiences.length > 0) filled++;
-            if (resumeData.education.length > 0) filled++;
-            if (resumeData.skills.length > 0) filled++;
-            if (resumeData.projects.length > 0) filled++;
+            if (resumeData.experiences && resumeData.experiences.length > 0) filled++;
+            if (resumeData.education && resumeData.education.length > 0) filled++;
+            if (resumeData.skills && resumeData.skills.length > 0) filled++;
+            if (resumeData.projects && resumeData.projects.length > 0) filled++;
 
             const pct = Math.round((filled / total) * 100);
             document.getElementById('completion-pct').innerText = `${pct}%`;
@@ -1105,34 +1221,59 @@
             let score = 0;
             const recs = [];
 
-            if (resumeData.fullname && resumeData.email && resumeData.phone) {
-                score += 20;
-            } else {
-                recs.push('Complete basic contact data (Phone, Email, Full Name).');
-            }
-
-            if (resumeData.summary && resumeData.summary.length > 90) {
-                score += 20;
-            } else {
-                recs.push('Write a professional summary of at least 90 characters.');
-            }
-
-            if (resumeData.experiences.length >= 1) {
-                score += 25;
-            } else {
-                recs.push('Add at least one detailed Work Experience item.');
-            }
-
-            if (resumeData.skills.length >= 4) {
-                score += 20;
-            } else {
-                recs.push('Add at least 4 industry-relevant core skills.');
-            }
-
-            if (resumeData.education.length >= 1) {
+            // 1. Basic Contact Info (15 Points)
+            if (resumeData.fullname && resumeData.email && resumeData.phone && resumeData.location) {
                 score += 15;
             } else {
-                recs.push('Include your formal education degrees.');
+                recs.push('Ensure complete contact information (Full Name, Email, Phone, Location).');
+            }
+
+            // 2. Summary Length & Quality (15 Points)
+            if (resumeData.summary && resumeData.summary.length >= 100) {
+                score += 15;
+            } else {
+                recs.push('Write a detailed professional summary (at least 100 characters long).');
+            }
+
+            // 3. Work Experience Depth (20 Points)
+            if (resumeData.experiences && resumeData.experiences.length >= 1) {
+                score += 20;
+            } else {
+                recs.push('Add at least one work experience record.');
+            }
+
+            // 4. Measurable Numbers/Metrics check (15 Points)
+            const fullText = (JSON.stringify(resumeData)).toLowerCase();
+            const hasNumbers = /\b\d+(%|\+|k|m| daily| million| active)?\b/i.test(fullText);
+            if (hasNumbers) {
+                score += 15;
+            } else {
+                recs.push('Quantify your work accomplishments using numbers, percentages, or metrics (e.g., "35%", "3M+ requests").');
+            }
+
+            // 5. Action Verb Analysis (15 Points)
+            let actionWordMatches = 0;
+            ATS_ACTION_WORDS.forEach(w => {
+                if (fullText.includes(w)) actionWordMatches++;
+            });
+            if (actionWordMatches >= 3) {
+                score += 15;
+            } else {
+                recs.push('Incorporate powerful action verbs into experience bullet points (e.g., "Architected", "Automated", "Reduced").');
+            }
+
+            // 6. Technical & Industry Skills (10 Points)
+            if (resumeData.skills && resumeData.skills.length >= 5) {
+                score += 10;
+            } else {
+                recs.push('List at least 5 core technical or job-related skills.');
+            }
+
+            // 7. Formal Education (10 Points)
+            if (resumeData.education && resumeData.education.length >= 1) {
+                score += 10;
+            } else {
+                recs.push('Include formal higher education or degree details.');
             }
 
             const circle = document.getElementById('ats-score-circle');
@@ -1143,14 +1284,14 @@
             circle.style.setProperty('--score', score);
             scoreVal.innerText = `${score}/100`;
 
-            if (score >= 80) {
-                scoreStatus.innerText = 'High Match';
+            if (score >= 85) {
+                scoreStatus.innerText = 'Maximised ATS';
                 scoreStatus.className = 'text-success fs-7 fw-bold';
-            } else if (score >= 50) {
-                scoreStatus.innerText = 'Moderate';
+            } else if (score >= 60) {
+                scoreStatus.innerText = 'Job Ready';
                 scoreStatus.className = 'text-warning fs-7 fw-bold';
             } else {
-                scoreStatus.innerText = 'Low Score';
+                scoreStatus.innerText = 'Needs Work';
                 scoreStatus.className = 'text-danger fs-7 fw-bold';
             }
 
@@ -1158,14 +1299,14 @@
                 <li class="list-group-item bg-transparent text-light border-secondary">
                     <i class="bi bi-exclamation-circle text-warning me-2"></i>${r}
                 </li>
-            `).join('') : '<li class="list-group-item bg-transparent text-success border-secondary"><i class="bi bi-check-circle me-2"></i>Perfect! Your resume satisfies all core ATS structural rules.</li>';
+            `).join('') : '<li class="list-group-item bg-transparent text-success border-secondary"><i class="bi bi-check-circle me-2"></i>Perfect! Your resume satisfies all ATS rules and keyword recommendations.</li>';
         }
 
         /* ==========================================================================
-           6. PDF GENERATION & UTILITIES
+           6. EXPORT UTILITIES (PDF & WORD .DOCX GENERATORS)
            ========================================================================== */
         function exportToPDF() {
-            showToast('Preparing A4 PDF export...');
+            showToast('Building high-resolution ATS PDF document...');
             const element = document.getElementById('resume-preview');
             
             const opt = {
@@ -1177,11 +1318,203 @@
             };
 
             html2pdf().set(opt).from(element).save().then(() => {
-                showToast('A4 PDF generated and downloaded successfully!');
+                showToast('A4 ATS PDF generated and downloaded successfully!');
             }).catch(err => {
                 console.error(err);
-                showToast('Failed to generate PDF file.');
+                showToast('Unable to export PDF document.');
             });
+        }
+
+        async function exportToWord() {
+            showToast('Generating Word (.docx) document...');
+            
+            try {
+                const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle } = window.docx;
+                const children = [];
+
+                // 1. Full Name
+                children.push(new Paragraph({
+                    text: resumeData.fullname || 'Your Name',
+                    heading: HeadingLevel.TITLE,
+                    spacing: { after: 80 }
+                }));
+
+                // 2. Job Title
+                if (resumeData.title) {
+                    children.push(new Paragraph({
+                        children: [
+                            new TextRun({
+                                text: resumeData.title,
+                                bold: true,
+                                color: "0284C7",
+                                size: 24
+                            })
+                        ],
+                        spacing: { after: 120 }
+                    }));
+                }
+
+                // 3. Contact Info Line
+                const contactParts = [
+                    resumeData.email,
+                    resumeData.phone,
+                    resumeData.location,
+                    resumeData.linkedin,
+                    resumeData.github
+                ].filter(Boolean);
+
+                if (contactParts.length > 0) {
+                    children.push(new Paragraph({
+                        children: [
+                            new TextRun({
+                                text: contactParts.join(" | "),
+                                color: "555555",
+                                size: 18
+                            })
+                        ],
+                        spacing: { after: 240 }
+                    }));
+                }
+
+                // Helper for Section Titles
+                const createSectionHeading = (titleText) => {
+                    return new Paragraph({
+                        text: titleText.toUpperCase(),
+                        heading: HeadingLevel.HEADING_2,
+                        spacing: { before: 240, after: 120 },
+                        border: {
+                            bottom: { style: BorderStyle.SINGLE, size: 6, color: "0284C7" }
+                        }
+                    });
+                };
+
+                // 4. Professional Summary
+                if (resumeData.summary) {
+                    children.push(createSectionHeading("Professional Summary"));
+                    children.push(new Paragraph({
+                        text: resumeData.summary,
+                        spacing: { after: 180 }
+                    }));
+                }
+
+                // 5. Work Experience
+                if (resumeData.experiences && resumeData.experiences.length > 0) {
+                    children.push(createSectionHeading("Work Experience"));
+                    resumeData.experiences.forEach(exp => {
+                        children.push(new Paragraph({
+                            children: [
+                                new TextRun({ text: exp.title || '', bold: true }),
+                                new TextRun({ text: exp.company ? ` - ${exp.company}` : '', italics: true }),
+                                new TextRun({ text: (exp.start || exp.end) ? ` (${exp.start || ''} - ${exp.end || ''})` : '', color: "666666" })
+                            ],
+                            spacing: { before: 120, after: 60 }
+                        }));
+                        if (exp.desc) {
+                            exp.desc.split('\n').forEach(line => {
+                                children.push(new Paragraph({
+                                    text: line.replace(/^•\s*/, ''),
+                                    bullet: { level: 0 },
+                                    spacing: { after: 40 }
+                                }));
+                            });
+                        }
+                    });
+                }
+
+                // 6. Education
+                if (resumeData.education && resumeData.education.length > 0) {
+                    children.push(createSectionHeading("Education"));
+                    resumeData.education.forEach(edu => {
+                        children.push(new Paragraph({
+                            children: [
+                                new TextRun({ text: edu.degree || '', bold: true }),
+                                new TextRun({ text: edu.school ? ` - ${edu.school}` : '', italics: true }),
+                                new TextRun({ text: (edu.start || edu.end) ? ` (${edu.start || ''} - ${edu.end || ''})` : '', color: "666666" })
+                            ],
+                            spacing: { before: 80, after: 60 }
+                        }));
+                    });
+                }
+
+                // 7. Projects
+                if (resumeData.projects && resumeData.projects.length > 0) {
+                    children.push(createSectionHeading("Key Projects"));
+                    resumeData.projects.forEach(p => {
+                        children.push(new Paragraph({
+                            children: [
+                                new TextRun({ text: p.name || '', bold: true }),
+                                new TextRun({ text: p.tech ? ` [${p.tech}]` : '', italics: true, color: "555555" })
+                            ],
+                            spacing: { before: 80, after: 40 }
+                        }));
+                        if (p.desc) {
+                            children.push(new Paragraph({
+                                text: p.desc,
+                                spacing: { after: 100 }
+                            }));
+                        }
+                    });
+                }
+
+                // 8. Skills
+                if (resumeData.skills && resumeData.skills.length > 0) {
+                    children.push(createSectionHeading("Skills & Expertise"));
+                    const skillList = resumeData.skills.map(s => s.name).filter(Boolean).join(", ");
+                    children.push(new Paragraph({
+                        text: skillList,
+                        spacing: { after: 180 }
+                    }));
+                }
+
+                // 9. Certifications & Languages
+                if ((resumeData.certs && resumeData.certs.length > 0) || (resumeData.langs && resumeData.langs.length > 0)) {
+                    if (resumeData.certs && resumeData.certs.length > 0) {
+                        children.push(createSectionHeading("Certifications"));
+                        resumeData.certs.forEach(c => {
+                            children.push(new Paragraph({
+                                text: `${c.name} (${c.org})`,
+                                bullet: { level: 0 },
+                                spacing: { after: 40 }
+                            }));
+                        });
+                    }
+                    if (resumeData.langs && resumeData.langs.length > 0) {
+                        children.push(createSectionHeading("Languages"));
+                        resumeData.langs.forEach(l => {
+                            children.push(new Paragraph({
+                                text: `${l.name} - ${l.level}`,
+                                bullet: { level: 0 },
+                                spacing: { after: 40 }
+                            }));
+                        });
+                    }
+                }
+
+                // 10. Custom Sections
+                if (resumeData.customSections && resumeData.customSections.length > 0) {
+                    resumeData.customSections.forEach(cs => {
+                        children.push(createSectionHeading(cs.heading || "Custom Section"));
+                        children.push(new Paragraph({
+                            text: cs.body || '',
+                            spacing: { after: 120 }
+                        }));
+                    });
+                }
+
+                // Construct and save DOCX file
+                const doc = new Document({
+                    sections: [{ properties: {}, children: children }]
+                });
+
+                const blob = await Packer.toBlob(doc);
+                const filename = `${(resumeData.fullname || 'Resume').replace(/\s+/g, '_')}_CV.docx`;
+                saveAs(blob, filename);
+
+                showToast('Word document exported successfully!');
+            } catch (err) {
+                console.error('Word export error:', err);
+                showToast('Unable to export Word document.');
+            }
         }
 
         function showToast(msg) {
@@ -1202,7 +1535,7 @@
             initForms();
             const modal = bootstrap.Modal.getInstance(document.getElementById('clearModal'));
             if (modal) modal.hide();
-            showToast('Form inputs reset to clean defaults.');
+            showToast('Form fields restored to sample defaults.');
         }
 
         /* Initializer */
@@ -1211,8 +1544,10 @@
             initForms();
 
             // GSAP Animations
-            gsap.from('.hero-text-col', { opacity: 0, y: 25, duration: 0.9, delay: 0.2 });
-            gsap.from('.tilt-card', { opacity: 0, scale: 0.92, duration: 0.9, delay: 0.4 });
+            if (typeof gsap !== 'undefined') {
+                gsap.from('.hero-text-col', { opacity: 0, y: 25, duration: 0.9, delay: 0.2 });
+                gsap.from('.tilt-card', { opacity: 0, scale: 0.92, duration: 0.9, delay: 0.4 });
+            }
         });
     </script>
 </body>
